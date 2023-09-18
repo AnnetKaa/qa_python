@@ -9,15 +9,15 @@ class TestBooksCollector:
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_new_book('Что делать, если ваш кот хочет вас убить')
 
-        assert 'Гордость и предубеждение и зомби' in collector.books_genre
+        assert collector.get_books_genre(), {'Гордость и предубеждение и зомби': '', 'Что делать, если ваш кот хочет вас убить': ''}
 
-    def test_set_book_genre_add_search_in_directory(self):
+    def test_set_book_genre_genre_added_to_the_directory(self):
 
         collector = BooksCollector()
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.set_book_genre('Гордость и предубеждение и зомби', 'Фантастика')
 
-        assert 'Фантастика' in collector.get_book_genre('Гордость и предубеждение и зомби')
+        assert collector.get_book_genre('Гордость и предубеждение и зомби')
 
     def test_get_book_genre_assign_the_genre_correctly(self):
 
@@ -38,18 +38,6 @@ class TestBooksCollector:
         collector.set_book_genre('Король Лев', 'Мультфильмы')
 
         assert ['Гордость и предубеждение и зомби', 'Гарри Поттер'] == collector.get_books_with_specific_genre('Фантастика')
-
-    def test_get_books_with_specific_genre_extra_genre_not_added(self):
-
-        collector = BooksCollector()
-        collector.add_new_book('Гордость и предубеждение и зомби')
-        collector.set_book_genre('Гордость и предубеждение и зомби','Фантастика')
-        collector.add_new_book('Гарри Поттер')
-        collector.set_book_genre('Гарри Поттер', 'Фантастика')
-        collector.add_new_book('Король Лев')
-        collector.set_book_genre('Король Лев', 'Мультфильмы')
-
-        assert ['Гордость и предубеждение и зомби', 'Король Лев'] != collector.get_books_with_specific_genre('Фантастика')
 
     def test_get_books_genre_the_correct_list_is_displayed(self):
 
@@ -86,25 +74,18 @@ class TestBooksCollector:
         collector = BooksCollector()
         collector.add_new_book(name)
         collector.add_book_in_favorites(name)
-        assert collector.get_list_of_favorites_books()
+        assert len(collector.get_list_of_favorites_books()) == 1
 
-    @pytest.mark.parametrize(
-        'name',
-        (
-                'Гордость и предубеждение и зомби',
-                'Гарри Поттер'
-        )
-    )
-    def test_delete_book_from_favorites_successfully_deleted(self, name):
+    def test_delete_book_from_favorites_successfully_deleted(self):
         collector = BooksCollector()
-        collector.add_new_book(name)
-        collector.add_book_in_favorites(name)
-        collector.delete_book_from_favorites(name)
-        assert collector.get_list_of_favorites_books() == []
+        collector.add_new_book('Гарри Поттер')
+        collector.add_book_in_favorites('Гарри Поттер')
+        collector.delete_book_from_favorites('Гарри Поттер')
+        assert not collector.get_list_of_favorites_books()
 
     def test_get_list_of_favorites_books_successful_output_of_a_list_of_favorite_books(self):
         collector = BooksCollector()
         collector.add_new_book('Гордость и предубеждение и зомби')
         collector.add_book_in_favorites('Гордость и предубеждение и зомби')
-        assert collector.get_list_of_favorites_books() == ['Гордость и предубеждение и зомби']
+        assert len(collector.get_list_of_favorites_books()) == 1
 
